@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240404130507_NomeDaNovaMigracao")]
+    partial class NomeDaNovaMigracao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -26,10 +29,11 @@ namespace API.Migrations
                     b.Property<bool?>("Concluida")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly?>("DataConclusao")
+                    b.Property<DateTime?>("DataConclusao")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("DataEntrada")
+                    b.Property<string>("DataEntrada")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descricao")

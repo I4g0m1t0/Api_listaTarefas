@@ -17,6 +17,10 @@ builder.Services.AddDbContext<AppDbContext>(Options =>
     Options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+//Liberando oo CORS para receber de solicitações qualquer origem
+#region [Cors]
+builder.Services.AddCors();
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +31,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+#region [Cors]
+app.UseCors(c =>
+{
+    c.AllowAnyHeader();//Qualquer cabeçalho
+    c.AllowAnyMethod();//Qualquer método HTTP
+    c.AllowAnyOrigin();//Qualquer origem
+});
+#endregion
 
 app.UseAuthorization();
 

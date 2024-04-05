@@ -19,16 +19,13 @@ namespace API.Controllers
 
         //Criar
         [HttpPost]
-        public async Task<ActionResult<List<Tarefa>>> AddTarefa(Tarefa novaTarefa)
+        public async Task<ActionResult<Tarefa>> AddTarefa(Tarefa novaTarefa)
         {
             if (novaTarefa != null)
             {
                 appDbContext.Tarefas.Add(novaTarefa);
                 await appDbContext.SaveChangesAsync();
-
-
-                var tarefas = await appDbContext.Tarefas.ToListAsync();
-                return Ok(tarefas);
+                return CreatedAtAction(nameof(GetTarefa), new { id = novaTarefa.Id }, novaTarefa);
             }
             return BadRequest();
         }
@@ -64,6 +61,8 @@ namespace API.Controllers
                 {
                     tarefa.Nome = atualizaTarefa.Nome;
                     tarefa.Descricao = atualizaTarefa.Descricao;
+                    tarefa.Concluida = atualizaTarefa.Concluida;
+                    tarefa.DataConclusao = atualizaTarefa.DataConclusao;
                     await appDbContext.SaveChangesAsync();
 
                     var tarefas = await appDbContext.Tarefas.ToListAsync();
