@@ -51,31 +51,29 @@ namespace API.Controllers
         }
 
         //Edita a tarefa que foi previamente cadastrada
-        [HttpPut]
-        public async Task<ActionResult<Tarefa>> AtualizaTarefa(Tarefa atualizaTarefa)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Tarefa>> AtualizaTarefa(int id, Tarefa atualizaTarefa)
         {
-            if (atualizaTarefa != null)
+            var tarefa = await appDbContext.Tarefas.FirstOrDefaultAsync(e => e.Id == id);
+            if (tarefa == null)
             {
-                var tarefa = await appDbContext.Tarefas.FirstOrDefaultAsync(e => e.Id == atualizaTarefa.Id);
-                if (tarefa != null)
-                {
-                    tarefa.Nome = atualizaTarefa.Nome;
-                    tarefa.Descricao = atualizaTarefa.Descricao;
-                    tarefa.Concluida = atualizaTarefa.Concluida;
-                    tarefa.DataConclusao = atualizaTarefa.DataConclusao;
-                    await appDbContext.SaveChangesAsync();
-
-                    var tarefas = await appDbContext.Tarefas.ToListAsync();
-                    return Ok(tarefas);
-                }
                 return NotFound();
             }
-            return BadRequest();
+
+            tarefa.Nome = atualizaTarefa.Nome;
+            tarefa.Descricao = atualizaTarefa.Descricao;
+            tarefa.Concluida = atualizaTarefa.Concluida;
+            tarefa.DataConclusao = atualizaTarefa.DataConclusao;
+
+            await appDbContext.SaveChangesAsync();
+
+            return Ok(tarefa);
         }
 
-        //Deletar tarefas
-        [HttpDelete]
-        public async Task<ActionResult<List<Tarefa>>> DeleteEmployee(int id)
+
+        //Deletar tarefa com um ID específico
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<Tarefa>>> DeletaTarefa(int id)
         {
             var tarefa = await appDbContext.Tarefas.FirstOrDefaultAsync(e => e.Id == id);
             if (tarefa != null)
@@ -86,7 +84,7 @@ namespace API.Controllers
                 var tarefas = await appDbContext.Tarefas.ToListAsync();
                 return Ok(tarefas);
             }
-            return BadRequest();
+            return NotFound();
         }
     }
 }
